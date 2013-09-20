@@ -3,43 +3,36 @@
 #
 
 REPORTER = dot
-THIRDPARTYDIR =../third-party
+WEBDIR = ../web-ui
+UIDIR = $(WEBDIR)/ui
+THIRDPARTYDIR =../web-ui/third-party
+WEBUISERVER = webui-server
+WEBUICLIENT = webui-client
+WEBUITHIRDPARTY = webui-third-party
 
-package:
-	mkdir -p node_modules
-	cp -r -p $(THIRDPARTYDIR)/node_modules/dev_requires/* node_modules/
-	cp -r -p $(THIRDPARTYDIR)/node_modules/install_requires/* node_modules/
-	./dev-install.sh
-	./generate-files.sh
+$(WEBUISERVER):
+	if [ ! -d ../$(WEBUISERVER) ]; then git clone https://github.com/mandal123/webui-server.git ../$(WEBUISERVER); else cd ../$(WEBUISERVER) && touch testFile && git stash; git pull --rebase; git stash pop; rm testFile; fi
+
+$(WEBUICLIENT):
+	if [ ! -d ../$(WEBUICLIENT) ]; then git clone https://github.com/mandal123/webui-client.git; else cd ../$(WEBUICLIENT) && touch testFile && git stash; git pull --rebase; git stash pop; rm testFile; fi
+
+$(WEBUITHIRDPARTY):
+	if [ ! -d ../$(WEBUITHIRDPARTY) ]; then git clone https://github.com/mandal123/webui-third-party.git; else cd ../$(WEBUITHIRDPARTY) && touch testFile && git stash; git pull --rebase; git stash pop; rm testFile; fi
+
+package: $(WEBUISERVER) $(WEBUICLIENT) $(WEBUITHIRDPARTY)
+	mkdir -p $(UIDIR)
+	mkdir -p $(THIRDPARTYDIR)
+	cp -rf ../$(WEBUISERVER)/ $(UIDIR)
+	cp -rf ../$(WEBUICLIENT)/ $(UIDIR)
+	cp -rf ../$(WEBUITHIRDPARTY)/ $(THIRDPARTYDIR)
+	cd $(UIDIR); make -f Makefile.server
+
+all:	
+	make package
 
 dev-install:
 	make package
 
-check: test
-
-test: test-integration
-
-test-integration:
-	@NODE_ENV=test ./node_modules/.bin/mocha \
-		--reporter $(REPORTER) \
-		tests/integration/*.js
-
-test-unit:
-	@NODE_ENV=test ./node_modules/.bin/mocha \
-		--reporter $(REPORTER) \
-		tests/unit/*.js
-
 clean:
-	rm -f src/serverroot/jobs/core/jobsCb.api.js
-	rm -f src/serverroot/web/core/feature.list.js
-	rm -f src/serverroot/web/routes/url.routes.js
-	rm -rf node_modules
-	rm -rf webroot/config/ipam
-	rm -rf webroot/config/virtualnetwork
-	rm -f webroot/js/config_global.js
-	rm -rf webroot/config/servicechaining
-	rm -rf webroot/config/packetcapture
-	rm -rf webroot/config/virtualdns
-	rm -rf webroot/assets
+	rm -rf ../web-ui
 
-.PHONY: dev-install test test-integration test-unit
