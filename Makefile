@@ -14,10 +14,10 @@ $(WEBUISERVER):
 	if [ ! -d ../$(WEBUISERVER) ]; then git clone https://github.com/mandal123/webui-server.git ../$(WEBUISERVER); else cd ../$(WEBUISERVER) && touch testFile && git stash; git pull --rebase; git stash pop; rm testFile; fi
 
 $(WEBUICLIENT):
-	if [ ! -d ../$(WEBUICLIENT) ]; then git clone https://github.com/mandal123/webui-client.git; else cd ../$(WEBUICLIENT) && touch testFile && git stash; git pull --rebase; git stash pop; rm testFile; fi
+	if [ ! -d ../$(WEBUICLIENT) ]; then git clone https://github.com/mandal123/webui-client.git ../$(WEBUICLIENT); else cd ../$(WEBUICLIENT) && touch testFile && git stash; git pull --rebase; git stash pop; rm testFile; fi
 
 $(WEBUITHIRDPARTY):
-	if [ ! -d ../$(WEBUITHIRDPARTY) ]; then git clone https://github.com/mandal123/webui-third-party.git; else cd ../$(WEBUITHIRDPARTY) && touch testFile && git stash; git pull --rebase; git stash pop; rm testFile; fi
+	if [ ! -d ../$(WEBUITHIRDPARTY) ]; then git clone https://github.com/mandal123/webui-third-party.git ../$(WEBUITHIRDPARTY); else cd ../$(WEBUITHIRDPARTY) && touch testFile && git stash; git pull --rebase; git stash pop; rm testFile; fi
 
 package: $(WEBUISERVER) $(WEBUICLIENT) $(WEBUITHIRDPARTY)
 	mkdir -p $(UIDIR)
