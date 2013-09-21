@@ -6,26 +6,23 @@ REPORTER = dot
 WEBDIR = ../web-ui
 UIDIR = $(WEBDIR)/ui
 THIRDPARTYDIR =../web-ui/third-party
-WEBUISERVER = webui-server
-WEBUICLIENT = webui-client
-WEBUITHIRDPARTY = webui-third-party
+WEBUISERVER = contrail-web-core
+WEBUICLIENT = contrail-web-ui
+WEBUITHIRDPARTY = contrail-web-third-party
 
 $(WEBUISERVER):
-	if [ ! -d ../$(WEBUISERVER) ]; then git clone https://github.com/mandal123/webui-server.git ../$(WEBUISERVER); else cd ../$(WEBUISERVER) && touch testFile && git stash; git pull --rebase; git stash pop; rm testFile; fi
+	if [ ! -d ../$(WEBUISERVER) ]; then git clone https://github.com/mandal123/contrail-web-core.git ../$(WEBUISERVER); else cd ../$(WEBUISERVER) && touch testFile && git stash; git pull --rebase; git stash pop; rm testFile; fi
 
 $(WEBUICLIENT):
-	if [ ! -d ../$(WEBUICLIENT) ]; then git clone https://github.com/mandal123/webui-client.git ../$(WEBUICLIENT); else cd ../$(WEBUICLIENT) && touch testFile && git stash; git pull --rebase; git stash pop; rm testFile; fi
+	if [ ! -d ../$(WEBUICLIENT) ]; then git clone https://github.com/mandal123/contrail-web-ui.git ../$(WEBUICLIENT); else cd ../$(WEBUICLIENT) && touch testFile && git stash; git pull --rebase; git stash pop; rm testFile; fi
 
 $(WEBUITHIRDPARTY):
-	if [ ! -d ../$(WEBUITHIRDPARTY) ]; then git clone https://github.com/mandal123/webui-third-party.git ../$(WEBUITHIRDPARTY); else cd ../$(WEBUITHIRDPARTY) && touch testFile && git stash; git pull --rebase; git stash pop; rm testFile; fi
+	if [ ! -d ../$(WEBUITHIRDPARTY) ]; then git clone https://github.com/mandal123/contrail-web-third-party.git ../$(WEBUITHIRDPARTY); else cd ../$(WEBUITHIRDPARTY) && touch testFile && git stash; git pull --rebase; git stash pop; rm testFile; fi
 
 package: $(WEBUISERVER) $(WEBUICLIENT) $(WEBUITHIRDPARTY)
-	mkdir -p $(UIDIR)
-	mkdir -p $(THIRDPARTYDIR)
-	cp -rf ../$(WEBUISERVER)/ $(UIDIR)
-	cp -rf ../$(WEBUICLIENT)/ $(UIDIR)
-	cp -rf ../$(WEBUITHIRDPARTY)/ $(THIRDPARTYDIR)
-	cd $(UIDIR); make -f Makefile.server
+	ln -sf ../$(WEBUICLIENT)/* .
+	ln -sf ../$(WEBUITHIRDPARTY)/node_modules node_modules
+	make -f Makefile.all
 
 all:	
 	make package
@@ -34,5 +31,4 @@ dev-install:
 	make package
 
 clean:
-	rm -rf ../web-ui
 
