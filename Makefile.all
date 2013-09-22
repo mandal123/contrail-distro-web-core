@@ -6,9 +6,6 @@ REPORTER = dot
 THIRDPARTYDIR =../third-party
 
 package:
-	mkdir -p node_modules
-	cp -r -p $(THIRDPARTYDIR)/node_modules/dev_requires/* node_modules/
-	cp -r -p $(THIRDPARTYDIR)/node_modules/install_requires/* node_modules/
 	./dev-install.sh
 	./generate-files.sh
 
