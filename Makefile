@@ -6,29 +6,34 @@ REPORTER = dot
 WEBDIR = ../web-ui
 UIDIR = $(WEBDIR)/ui
 THIRDPARTYDIR =../web-ui/third-party
-WEBUISERVER = contrail-distro-web-core
-WEBUICLIENT = contrail-distro-web-ui
-WEBUITHIRDPARTY = contrail-distro-web-third-party
+WEBUISERVER = contrail-web-core
+WEBUICLIENT = contrail-web-ui
+WEBUITHIRDPARTY = contrail-web-third-party
 
 $(WEBUISERVER):
-	if [ ! -d ../$(WEBUISERVER) ]; then git clone https://github.com/mandal123/contrail-distro-web-core.git ../$(WEBUISERVER); else cd ../$(WEBUISERVER) && touch testFile && git stash; git pull --rebase; git stash pop; rm testFile; fi
+	if [ ! -d ../$(WEBUISERVER) ]; then git clone https://github.com/mandal123/contrail-web-core.git ../$(WEBUISERVER); else cd ../$(WEBUISERVER) && touch testFile && git stash; git pull --rebase; git stash pop; rm testFile; fi
 
 $(WEBUICLIENT):
-	if [ ! -d ../$(WEBUICLIENT) ]; then git clone https://github.com/mandal123/contrail-distro-web-ui.git ../$(WEBUICLIENT); else cd ../$(WEBUICLIENT) && touch testFile && git stash; git pull --rebase; git stash pop; rm testFile; fi
+	if [ ! -d ../$(WEBUICLIENT) ]; then git clone https://github.com/mandal123/contrail-web-ui.git ../$(WEBUICLIENT); else cd ../$(WEBUICLIENT) && touch testFile && git stash; git pull --rebase; git stash pop; rm testFile; fi
 
 $(WEBUITHIRDPARTY):
-	if [ ! -d ../$(WEBUITHIRDPARTY) ]; then git clone https://github.com/mandal123/contrail-distro-web-third-party.git ../$(WEBUITHIRDPARTY); else cd ../$(WEBUITHIRDPARTY) && touch testFile && git stash; git pull --rebase; git stash pop; rm testFile; fi
+	if [ ! -d ../$(WEBUITHIRDPARTY) ]; then git clone https://github.com/mandal123/contrail-web-third-party.git ../$(WEBUITHIRDPARTY); else cd ../$(WEBUITHIRDPARTY) && touch testFile && git stash; git pull --rebase; git stash pop; rm testFile; fi
 
-package: $(WEBUISERVER) $(WEBUICLIENT) $(WEBUITHIRDPARTY)
+dev-env:
 	ln -sf ../$(WEBUICLIENT)/* .
 	ln -sf ../$(WEBUITHIRDPARTY)/node_modules node_modules
 	make -f Makefile.all
+
+package: $(WEBUISERVER) $(WEBUICLIENT) $(WEBUITHIRDPARTY)
+	make dev-env
 
 all:	
 	make package
 
 dev-install:
 	make package
+
+repos: $(WEBUISERVER) $(WEBUICLIENT) $(WEBUITHIRDPARTY)
 
 clean:
 
