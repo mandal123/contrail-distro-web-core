@@ -21,7 +21,9 @@ Directions to Build Working Environment for Contrail WebUI
 
 2. $cd contrail-web-core
 
-3. $make repos
+3. Create all the required repos by invoking below
+
+        $make repos
 
 =>It will download two more repos contrail-web-ui and contrail-web-third-party in
   the parent directory.
